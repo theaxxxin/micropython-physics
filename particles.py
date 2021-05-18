@@ -1,5 +1,12 @@
 ##--Micropython--##
 ##--ESP32 with 1.3Inch OLED Via i2c--##
+#
+#
+#--- First of all, this project could not have been completed without help from various members of the global programming community. As and when people help me, I will add them to this list which I hope will be maintained
+#--- Special thanks to Mattia Conti, Deshipu (Radomir Dopieralski), and 20GOTO10 from discord. If you all ever see this, you guys rock!
+#
+#----- CODE FINALLY WORKING!----
+
 from machine import Pin, I2C
 
 import sh1106
@@ -15,10 +22,6 @@ display = sh1106.SH1106_I2C(128, 64, i2c, Pin(16), 0x3c)
 display.sleep(False)
 display.fill(0)
 
-##### DISPLAY TEST ######
-display.rect(30,30,10,10,1)
-##########################
-# Seems to power on the display
 
 # ------
 
@@ -40,14 +43,16 @@ class particle:
         self.update()
 
     def update(self):
-        text = "X pos :{0},yPos: {1}".format(self.position[0],self.position[1])
+        text = "X pos :{0},yPos: {1}".format(self.position[0], self.position[1])
         print(text)
-        display.pixel(int(round(self.position[0])), int(round(self.position[1], 1)))
-        display.show()
+        ## The code below draws a pixel at the x and y position of the particle when called (Last parameter is colour, can either be 0 or 1)
+        display.pixel(int(round(self.position[0])), int(round(self.position[1])),1)
+    
         
     def clear(self):
-        display.pixel(int(round(self.position[0])), int(round(self.position[1], 0))) #Here, the pixel will erase itself, call this before updating position
-        display.show()
+        ## The code below draws a pixel at the x and y position of the particle when called (Last parameter is colour, can either be 0 or 1)
+        display.pixel(int(round(self.position[0])), int(round(self.position[1])),0)
+         
         
 
 
@@ -59,7 +64,7 @@ class particle:
                 x = self.position[0] - particles[i].position[0]
                 y = self.position[1] - particles[i].position[1]
                 if x ** 2 + y ** 2 < 1:
-                    print('true') #Here we print so we can detect collisions on the terminal
+                    print('true')
                     return [True, i]
         print('false')
         return [False]
@@ -93,15 +98,19 @@ Nparticles = 2
 rangeparticles = range(Nparticles)
 mainparticles = []
 mainparticles += [particle([10,30],30,[1,0],0)]
-mainparticles += [particle([80,30],30,[-1,0],1)]
+mainparticles += [particle([80,30],400,[-1,0],1)]
 
 while True:
+    
+    #Clear, Scatter, move and update
+    
     for i in rangeparticles:
         mainparticles[i].clear()
         
+        
     for i in rangeparticles:
         mainparticles[i].scatter(mainparticles,Nparticles)
-   
+       
 
     for i in rangeparticles:
         mainparticles[i].isscatter = True
@@ -109,6 +118,6 @@ while True:
 
     for i in rangeparticles:
          mainparticles[i].update()
-
+    display.show()
 
 
