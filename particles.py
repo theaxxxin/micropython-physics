@@ -4,6 +4,8 @@
 ##CODE PORTED FROM THIS TUTORIAL BY MATTIA CONTI https://www.youtube.com/channel/UCN7uBodTAg8KcsuDiJ9u4Rg #
 ##STILL DOESN'T WORK FOR SOME REASON# 
 #HELP#
+##--Micropython--##
+##--ESP32 with 1.3Inch OLED Via i2c--##
 from machine import Pin, I2C
 
 import sh1106
@@ -41,12 +43,13 @@ class particle:
 
     def update(self):
         
-        display.pixel(int(round(self.position[0])), int(round(self.position[1], 1))) # Accodring to SH1106 Framebuf, we need to specify a colour which is either 0 or 1, in this case we say 1
+        display.pixel(int(round(self.position[0])), int(round(self.position[1], 1)))  # Accodring to SH1106 Framebuf, we need to specify a colour which is either 0 or 1, in this case we say 1
         display.show()
         
     def clear(self):
         display.pixel(int(round(self.position[0])), int(round(self.position[1], 0))) #Here, the pixel will erase itself, call this before updating position
         display.show()
+        
 
 
 
@@ -57,7 +60,9 @@ class particle:
                 x = self.position[0] - particles[i].position[0]
                 y = self.position[1] - particles[i].position[1]
                 if x ** 2 + y ** 2 < 1:
+                    print('true') #Here we print so we can detect collisions on the terminal
                     return [True, i]
+        print('false') #Here we print so we can detect collisions on the terminal
         return [False]
 
     def scatter(self, particles, nparticles):
@@ -88,8 +93,8 @@ class particle:
 Nparticles = 2
 rangeparticles = range(Nparticles)
 mainparticles = []
-mainparticles += [particle([50,30],30,[-1,0],0)]
-mainparticles += [particle([30,50],30,[1,0],1)]
+mainparticles += [particle([10,30],30,[1,0],0)]
+mainparticles += [particle([80,30],30,[-1,0],1)]
 
 while True:
     for i in rangeparticles:
