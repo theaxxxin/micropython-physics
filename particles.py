@@ -1,11 +1,5 @@
 ##--Micropython--##
 ##--ESP32 with 1.3Inch OLED Via i2c--##
-
-##CODE PORTED FROM THIS TUTORIAL BY MATTIA CONTI https://www.youtube.com/channel/UCN7uBodTAg8KcsuDiJ9u4Rg #
-##STILL DOESN'T WORK FOR SOME REASON# 
-#HELP#
-##--Micropython--##
-##--ESP32 with 1.3Inch OLED Via i2c--##
 from machine import Pin, I2C
 
 import sh1106
@@ -42,8 +36,9 @@ class particle:
         self.update()
 
     def update(self):
-        
-        display.pixel(int(round(self.position[0])), int(round(self.position[1], 1)))  # Accodring to SH1106 Framebuf, we need to specify a colour which is either 0 or 1, in this case we say 1
+        text = "X pos :{0},yPos: {1}".format(self.position[0],self.position[1])
+        print(text)
+        display.pixel(int(round(self.position[0])), int(round(self.position[1], 1)))
         display.show()
         
     def clear(self):
@@ -62,7 +57,7 @@ class particle:
                 if x ** 2 + y ** 2 < 1:
                     print('true') #Here we print so we can detect collisions on the terminal
                     return [True, i]
-        print('false') #Here we print so we can detect collisions on the terminal
+        print('false')
         return [False]
 
     def scatter(self, particles, nparticles):
@@ -99,17 +94,17 @@ mainparticles += [particle([80,30],30,[-1,0],1)]
 while True:
     for i in rangeparticles:
         mainparticles[i].clear()
-
-    for i in rangeparticles:
-        mainparticles[i].update()
-
+        
     for i in rangeparticles:
         mainparticles[i].scatter(mainparticles,Nparticles)
+   
 
     for i in rangeparticles:
         mainparticles[i].isscatter = True
         mainparticles[i].move()
 
+    for i in rangeparticles:
+         mainparticles[i].update()
 
 
 
