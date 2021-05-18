@@ -15,6 +15,10 @@ display = sh1106.SH1106_I2C(128, 64, i2c, Pin(16), 0x3c)
 display.sleep(False)
 display.fill(0)
 
+##### DISPLAY TEST ######
+display.rect(30,30,10,10,1)
+##########################
+# Seems to power on the display
 
 # ------
 
